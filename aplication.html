@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Aplicación educativa para niños: aprende sobre animales con sonidos reales y juegos interactivos">
+    <title>Animales Divertidos - Aprende Jugando</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Arial Rounded MT Bold', 'Helvetica Rounded', Arial, sans-serif;
+            background: linear-gradient(135deg, #E8F5E9 0%, #B2DFDB 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            padding: 20px;
+        }
+
+        /* Pantalla de inicio */
+        .home-screen {
+            text-align: center;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .app-title {
+            font-size: clamp(2rem, 8vw, 4rem);
+            color: #2E7D32;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.1);
+            margin-bottom: 40px;
+            text-transform: uppercase;
+            animation: bounce 2s infinite;
+        }
+
+        .mode-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .mode-btn {
+            background: linear-gradient(135deg, #66BB6A 0%, #43A047 100%);
+            color: white;
+            border: none;
+            padding: 30px 60px;
+            font-size: clamp(1.5rem, 5vw, 2.5rem);
+            border-radius: 25px;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            font-weight: bold;
+            min-width: 280px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mode-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.3);
+        }
+
+        .mode-btn:active {
+            transform: translateY(-2px);
+        }
+
+        .mode-btn.quiz-btn {
+            background: linear-gradient(135deg, #FFA726 0%, #FB8C00 100%);
+        }
+
+        .mode-btn.tutorial-btn {
+            background: linear-gradient(135deg, #42A5F5 0%, #1E88E5 100%);
+        }
+
+        .mode-btn.info-btn {
+            background: linear-gradient(135deg, #AB47BC 0%, #8E24AA 100%);
+        }
+
+        /* Navegación */
+        .nav-bar {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            background: #2E7D32;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: clamp(1rem, 3vw, 1.5rem);
+            border-radius: 15px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            font-weight: bold;
+            min-width: 120px;
+        }
+
+        .nav-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+        }
+
+        /* Control de sonido */
+        .sound-control {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #2E7D32;
+            color: white;
+            border: none;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            font-size: 1.8rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .sound-control:hover {
+            transform: scale(1.1);
+        }
+
+        .sound-control.muted {
+            background: #D32F2F;
+        }
+
+        /* Galería de animales */
+        .animal-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .animal-card {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            animation: slideInUp 0.6s ease-out forwards;
+            opacity: 0;
+        }
+
+        .animal-card:nth-child(1) { animation-delay: 0.1s; }
+        .animal-card:nth-child(2) { animation-delay: 0.2s; }
+        .animal-card:nth-child(3) { animation-delay: 0.3s; }
+        .animal-card:nth-child(4) { animation-delay: 0.4s; }
+        .animal-card:nth-child(5) { animation-delay: 0.5s; }
+        .animal-card:nth-child(6) { animation-delay: 0.6s; }
+        .animal-card:nth-child(7) { animation-delay: 0.7s; }
+        .animal-card:nth-child(8) { animation-delay: 0.8s; }
+        .animal-card:nth-child(9) { animation-delay: 0.9s; }
+        .animal-card:nth-child(10) { animation-delay: 1s; }
+
+        .animal-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+        }
+
+        .animal-card:active {
+            transform: scale(0.98);
+        }
+
+        .animal-card.playing {
+            animation: pulse 0.6s ease-in-out;
+        }
+
+        .animal-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 15px;
+            margin-bottom: 15px;
+        }
+
+        .animal-name {
+            font-size: clamp(1.5rem, 4vw, 2rem);
+            color: #1B5E20;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        /* Pantalla de Quiz */
+        .quiz-screen {
+            text-align: center;
+        }
+
+        .quiz-question {
+            font-size: clamp(1.8rem, 6vw, 3rem);
+            color: #E65100;
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        .quiz-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 25px;
+        }
+
+        .quiz-option {
+            background: white;
+            border: 5px solid transparent;
+            border-radius: 20px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .quiz-option:hover {
+            transform: scale(1.05);
+            border-color: #FFA726;
+        }
+
+        .quiz-option.correct {
+            border-color: #66BB6A;
+            animation: celebrate 0.6s ease;
+        }
+
+        .quiz-option.incorrect {
+            border-color: #EF5350;
+            animation: shake 0.5s ease;
+        }
+
+        /* Resultado del Quiz */
+        .result-screen {
+            text-align: center;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .result-message {
+            font-size: clamp(2rem, 7vw, 4rem);
+            color: #2E7D32;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+        }
+
+        .score-display {
+            font-size: clamp(1.5rem, 5vw, 2.5rem);
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+
+        .emoji {
+            font-size: clamp(4rem, 15vw, 8rem);
+            display: inline-block;
+            animation: rotate-emoji 2s ease-in-out infinite;
+        }
+
+        /* Pantalla de Tutorial */
+        .tutorial-screen, .info-screen {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .section-title {
+            font-size: clamp(2rem, 6vw, 3rem);
+            color: #2E7D32;
+            text-align: center;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+        }
+
+        .video-container, .info-container {
+            background: white;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            margin-bottom: 30px;
+        }
+
+        .video-container iframe {
+            width: 100%;
+            height: 500px;
+            border-radius: 15px;
+        }
+
+        .video-description, .info-content {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+
+        .video-description h3, .info-content h3 {
+            color: #E65100;
+            font-size: clamp(1.5rem, 4vw, 2rem);
+            margin-bottom: 20px;
+        }
+
+        .video-description ul, .info-content ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .video-description li, .info-content li {
+            font-size: clamp(1rem, 3vw, 1.3rem);
+            color: #333;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        /* Confeti */
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: #FFD700;
+            top: -10px;
+            z-index: 9999;
+            animation: confetti-fall 3s linear;
+        }
+
+        /* Animaciones */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 15px 40px rgba(46, 125, 50, 0.4);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            }
+        }
+
+        @keyframes celebrate {
+            0%, 100% { transform: scale(1); }
+            25% { transform: scale(1.1) rotate(5deg); }
+            75% { transform: scale(1.1) rotate(-5deg); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        @keyframes rotate-emoji {
+            0% {
+                transform: rotate(0deg) scale(1);
+            }
+            25% {
+                transform: rotate(10deg) scale(1.1);
+            }
+            50% {
+                transform: rotate(0deg) scale(1);
+            }
+            75% {
+                transform: rotate(-10deg) scale(1.1);
+            }
+            100% {
+                transform: rotate(0deg) scale(1);
+            }
+        }
+
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(-100vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        /* Clases de utilidad */
+        .hidden {
+            display: none !important;
+        }
+
+        /* Responsividad */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            .animal-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                gap: 15px;
+            }
+
+            .animal-image {
+                height: 150px;
+            }
+
+            .mode-btn {
+                padding: 20px 40px;
+                min-width: 240px;
+            }
+
+            .nav-btn {
+                padding: 12px 20px;
+                min-width: 100px;
+            }
+
+            .video-container iframe {
+                height: 250px;
+            }
+
+            .sound-control {
+                width: 50px;
+                height: 50px;
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Pantalla de inicio -->
+        <div id="homeScreen" class="home-screen">
+            <h1 class="app-title">🐾 Animales Divertidos 🐾</h1>
+            <div class="mode-buttons">
+                <button class="mode-btn" onclick="showGallery()" aria-label="Ver galería de animales">
+                    📚 VER ANIMALES
+                </button>
+                <button class="mode-btn quiz-btn" onclick="startQuiz()" aria-label="Jugar quiz">
+                    🎮 JUGAR QUIZ
+                </button>
+                <button class="mode-btn tutorial-btn" onclick="showTutorial()" aria-label="Ver tutorial">
+                    📺 VER TUTORIAL
+                </button>
+                <button class="mode-btn info-btn" onclick="showInfo()" aria-label="Información adicional">
+                    ℹ️ INFORMACIÓN
+                </button>
+            </div>
+        </div>
+
+        <!-- Pantalla de galería -->
+        <div id="galleryScreen" class="hidden">
+            <div class="nav-bar">
+                <button class="nav-btn" onclick="goHome()" aria-label="Volver al inicio">🏠 INICIO</button>
+            </div>
+            <h2 class="section-title">🐾 GALERÍA DE ANIMALES</h2>
+            <div class="animal-grid" id="animalGrid" role="grid"></div>
+        </div>
+
+        <!-- Pantalla de Quiz -->
+        <div id="quizScreen" class="hidden quiz-screen">
+            <div class="nav-bar">
+                <button class="nav-btn" onclick="goHome()" aria-label="Volver al inicio">🏠 INICIO</button>
+                <button class="nav-btn" onclick="startQuiz()" aria-label="Reiniciar quiz">🔄 NUEVO JUEGO</button>
+            </div>
+            <div class="quiz-question" id="quizQuestion" role="heading" aria-level="2"></div>
+            <div class="quiz-options" id="quizOptions" role="group" aria-label="Opciones de respuesta"></div>
+        </div>
+
+        <!-- Pantalla de resultados -->
+        <div id="resultScreen" class="hidden result-screen">
+            <h2 class="result-message">¡JUEGO TERMINADO!</h2>
+            <div class="emoji" aria-hidden="true">🎉</div>
+            <div class="score-display" id="scoreDisplay" role="status" aria-live="polite"></div>
+            <div class="mode-buttons">
+                <button class="mode-btn quiz-btn" onclick="startQuiz()">
+                    🎮 JUGAR DE NUEVO
+                </button>
+                <button class="mode-btn" onclick="goHome()">
+                    🏠 VOLVER AL INICIO
+                </button>
+            </div>
+        </div>
+
+        <!-- Pantalla de Tutorial -->
+        <div id="tutorialScreen" class="hidden tutorial-screen">
+            <div class="nav-bar">
+                <button class="nav-btn" onclick="goHome()">🏠 INICIO</button>
+            </div>
+            
+            <h2 class="section-title">📺 CÓMO USAR LA APP</h2>
+            
+            <div class="video-container">
+                <!-- Reemplaza con tu URL de video de YouTube o archivo local -->
+                <iframe 
+                    src="https://www.youtube.com/embed/dQw4w9WgXcQ" 
+                    title="Tutorial de la aplicación"
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen
+                    aria-label="Video tutorial de uso de la aplicación">
+                </iframe>
+                <p style="margin-top: 15px; color: #666; text-align: center;">
+                    ⚠️ Reemplaza esta URL con tu video tutorial de 5 minutos
+                </p>
+            </div>
+            
+            <div class="video-description">
+                <h3>🎓 En este video aprenderás:</h3>
+                <ul>
+                    <li>✅ Cómo explorar la galería de animales</li>
+                    <li>✅ Cómo jugar el quiz educativo</li>
+                    <li>✅ Consejos para aprovechar al máximo la app</li>
+                    <li>✅ Características especiales de navegación</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Pantalla de Información -->
+        <div id="infoScreen" class="hidden info-screen">
+            <div class="nav-bar">
+                <button class="nav-btn" onclick="goHome()">🏠 INICIO</button>
+            </div>
+            
+            <h2 class="section-title">ℹ️ ACERCA DE LA APP</h2>
+            
+            <div class="info-container">
+                <div class="info-content">
+                    <h3>🎯 Objetivo Educativo</h3>
+                    <p style="font-size: 1.2rem; color: #555; line-height: 1.8; margin-bottom: 20px;">
+                        Esta aplicación está diseñada para niños de 3 a 6 años con el objetivo de enseñar sobre animales de forma interactiva y divertida mediante sonidos reales e imágenes de alta calidad.
+                    </p>
+                    
+                    <h3>🌟 Características Principales</h3>
+                    <ul>
+                        <li>✅ 10 animales con sonidos reales de alta fidelidad</li>
+                        <li>✅ Quiz interactivo con retroalimentación inmediata</li>
+                        <li>✅ Diseño intuitivo para uso autónomo</li>
+                        <li>✅ Animaciones suaves y atractivas</li>
+                        <li>✅ 100% responsivo (móvil y escritorio)</li>
+                        <li>✅ Accesible y seguro para niños</li>
+                    </ul>
+                    
+                    <h3>👨‍💻 Información Técnica</h3>
+                    <ul>
+                        <li>📱 Compatible con iOS y Android</li>
+                        <li>💻 Funciona en cualquier navegador moderno</li>
+                        <li>🔊 Requiere altavoces o audífonos</li>
+                        <li>📶 No requiere conexión constante (después de carga inicial)</li>
+                    </ul>
+                    
+                    <h3>🎓 Desarrollado por:</h3>
+                    <p style="font-size: 1.2rem; color: #555; line-height: 1.8;">
+                        [Tu Nombre]<br>
+                        Universidad: [Tu Universidad]<br>
+                        Año: 2026
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Control de sonido -->
+    <button id="soundControl" class="sound-control" onclick="toggleSound()" aria-label="Activar/Desactivar sonido">
+        🔊
+    </button>
+
+    <script>
+        // Base de datos de animales
+        const animals = [
+            {
+                name: "PERRO",
+                image: "https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=600&h=600&fit=crop",
+                sound: "https://cdn.pixabay.com/audio/2022/03/10/audio_4c991fffb8.mp3"
+            },
+            {
+                name: "GATO",
+                image: "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=600&h=600&fit=crop",
+                sound: "https://cdn.pixabay.com/audio/2023/05/23/audio_1e0f2554d0.mp3"
+            },
+            {
+                name: "VACA",
+                image: "https://images.unsplash.com/photo-1516467508483-a7212febe31a?w=600&h=600&fit=crop",
+                sound: "https://cdn.pixabay.com/audio/2022/03/10/audio_35eb87e5d9.mp3"
+            },
+            {
+                name: "CABALLO",
+                image: "https://images.unsplash.com/photo-1553284965-83fd3e82fa5a?w=600&h=600&fit=crop",
+                sound: "https://cdn.pixabay.com/audio/2022/03/10/audio_7823c09be6.mp3"
+            },
+            {
+                name: "OVEJA",
+                image: "https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=600&h=600&fit=crop",
+                sound: "https://cdn.pixabay.com/audio/2023/08/07/audio_1f87f49d8e.mp3"
+            },
+            {
+                name: "CERDO",
+                image: "https://images.unsplash.com/photo-1516467508483-a7212febe31a?w=600&h=600&fit=crop",
+                sound: "https://cdn.pixabay.com/audio/2022/03/10/audio_9c9c0ab9fa.mp3"
+            },
+            {
+                name: "PATO",
+                image: "https://images.unsplash.com/photo-1551969014-7d2c4cddf0b6?w=600&h=600&fit=crop",
+                sound: "https://cdn.pixabay.com/audio/2022/03/10/audio_1e5d7f6fa4.mp3"
+            },
+            {
+                name: "GALLO",
+                image: "https://images.unsplash.com/photo-1548550023-2bdb3c5beed7?w=600&h=600&fit=crop",
+                sound: "https://cdn.pixabay.com/audio/2022/03/24/audio_e123467c11.mp3"
+            },
+            {
+                name: "LEÓN",
+                image: "https://images.unsplash.com/photo-1546182990-dffeafbe841d?w=600&h=600&fit=crop",
+                sound: "https://cdn.pixabay.com/audio/2022/03/10/audio_5c0fa0c495.mp3"
+            },
+            {
+                name: "ELEFANTE",
+                image: "https://images.unsplash.com/photo-1564760055775-d63b17a55c44?w=600&h=600&fit=crop",
+                sound: "https://cdn.pixabay.com/audio/2022/03/10/audio_ad86886903.mp3"
+            }
+        ];
+
+        let currentQuizIndex = 0;
+        let score = 0;
+        let usedAnimals = [];
+        const totalQuestions = 5;
+        let isSoundMuted = false;
+
+        // Sistema de audio con gestión de estado
+        let currentAudio = null;
+
+        function playSound(url) {
+            if (isSoundMuted) return;
+            
+            if (currentAudio) {
+                currentAudio.pause();
+                currentAudio.currentTime = 0;
+            }
+            currentAudio = new Audio(url);
+            currentAudio.play().catch(e => console.log("Error reproduciendo audio:", e));
+        }
+
+        function playSuccessSound() {
+            playSound('https://cdn.pixabay.com/audio/2021/08/04/audio_12b0c7443c.mp3');
+        }
+
+        function playErrorSound() {
+            playSound('https://cdn.pixabay.com/audio/2022/03/15/audio_49a538c423.mp3');
+        }
+
+        // Control de sonido
+        function toggleSound() {
+            isSoundMuted = !isSoundMuted;
+            const btn = document.getElementById('soundControl');
+            
+            if (isSoundMuted) {
+                btn.textContent = '🔇';
+                btn.classList.add('muted');
+                if (currentAudio) {
+                    currentAudio.pause();
+                }
+            } else {
+                btn.textContent = '🔊';
+                btn.classList.remove('muted');
+            }
+        }
+
+        // Navegación entre pantallas
+        function hideAllScreens() {
+            document.getElementById('homeScreen').classList.add('hidden');
+            document.getElementById('galleryScreen').classList.add('hidden');
+            document.getElementById('quizScreen').classList.add('hidden');
+            document.getElementById('resultScreen').classList.add('hidden');
+            document.getElementById('tutorialScreen').classList.add('hidden');
+            document.getElementById('infoScreen').classList.add('hidden');
+        }
+
+        function goHome() {
+            hideAllScreens();
+            document.getElementById('homeScreen').classList.remove('hidden');
+            if (currentAudio) {
+                currentAudio.pause();
+                currentAudio = null;
+            }
+        }
+
+        function showGallery() {
+            hideAllScreens();
+            document.getElementById('galleryScreen').classList.remove('hidden');
+            renderGallery();
+        }
+
+        function showTutorial() {
+            hideAllScreens();
+            document.getElementById('tutorialScreen').classList.remove('hidden');
+        }
+
+        function showInfo() {
+            hideAllScreens();
+            document.getElementById('infoScreen').classList.remove('hidden');
+        }
+
+        // Renderizar galería con animación de pulso
+        function renderGallery() {
+            const grid = document.getElementById('animalGrid');
+            grid.innerHTML = '';
+            
+            animals.forEach(animal => {
+                const card = document.createElement('div');
+                card.className = 'animal-card';
+                card.setAttribute('role', 'button');
+                card.setAttribute('tabindex', '0');
+                card.setAttribute('aria-label', `${animal.name}, presiona para escuchar`);
+                
+                card.innerHTML = `
+                    <img src="${animal.image}" alt="${animal.name}" class="animal-image">
+                    <div class="animal-name">${animal.name}</div>
+                `;
+                
+                const clickHandler = () => {
+                    playSound(animal.sound);
+                    card.classList.add('playing');
+                    setTimeout(() => card.classList.remove('playing'), 600);
+                };
+                
+                card.onclick = clickHandler;
+                card.onkeypress = (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        clickHandler();
+                    }
+                };
+                
+                grid.appendChild(card);
+            });
+        }
+
+        // Sistema de Quiz
+        function startQuiz() {
+            hideAllScreens();
+            document.getElementById('quizScreen').classList.remove('hidden');
+            currentQuizIndex = 0;
+            score = 0;
+            usedAnimals = [];
+            showNextQuestion();
+        }
+
+        function getRandomAnimals(correctAnimal, count) {
+            const options = [correctAnimal];
+            const available = animals.filter(a => a.name !== correctAnimal.name);
+            
+            while (options.length < count && available.length > 0) {
+                const randomIndex = Math.floor(Math.random() * available.length);
+                options.push(available[randomIndex]);
+                available.splice(randomIndex, 1);
+            }
+            
+            return options.sort(() => Math.random() - 0.5);
+        }
+
+        function showNextQuestion() {
+            if (currentQuizIndex >= totalQuestions) {
+                showResults();
+                return;
+            }
+
+            const availableAnimals = animals.filter(a => !usedAnimals.includes(a.name));
+            if (availableAnimals.length === 0) {
+                usedAnimals = [];
+            }
+
+            const correctAnimal = availableAnimals[Math.floor(Math
