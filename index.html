@@ -603,16 +603,16 @@
         // Base de datos de animales
         // Tu nueva base de datos con tus archivos de GitHub
         const animals = [
-            { name: "PERRO", image: "image/perro.jpg", sound: "audio/perro.mp3" },
-            { name: "GATO", image: "image/gato.jpg", sound: "audio/gato.mp3" },
-            { name: "VACA", image: "image/vaca.jpg", sound: "audio/vaca.mp3" },
-            { name: "CABALLO", image: "image/caballo.jpg", sound: "audio/caballo.mp3" },
-            { name: "OVEJA", image: "image/oveja.jpg", sound: "audio/oveja.mp3" },
-            { name: "CERDO", image: "image/cerdo.jpg", sound: "audio/cerdo.mp3" },
-            { name: "PATO", image: "image/pato.jpg", sound: "audio/pato.mp3" },
-            { name: "GALLO", image: "image/gallo.jpg", sound: "audio/gallo.mp3" },
-            { name: "LEÓN", image: "image/león.jpg", sound: "audio/león.mp3" },
-            { name: "ELEFANTE", image: "image/elefante.jpg", sound: "audio/elefante.mp3" }
+            { name: "PERRO", image: "image/perro.jpg", sound: "sonidos/perro.mp3" },
+            { name: "GATO", image: "image/gato.jpg", sound: "sonidos/gato.mp3" },
+            { name: "VACA", image: "image/vaca.jpg", sound: "sonidos/vaca.mp3" },
+            { name: "CABALLO", image: "image/caballo.jpg", sound: "sonidos/caballo.mp3" },
+            { name: "OVEJA", image: "image/oveja.jpg", sound: "sonidos/oveja.mp3" },
+            { name: "CERDO", image: "image/cerdo.jpg", sound: "sonidos/cerdo.mp3" },
+            { name: "PATO", image: "image/pato.jpg", sound: "sonidos/pato.mp3" },
+            { name: "GALLO", image: "image/gallo.jpg", sound: "sonidos/gallo.mp3" },
+            { name: "LEÓN", image: "image/león.jpg", sound: "sonidos/león.mp3" },
+            { name: "ELEFANTE", image: "image/elefante.jpg", sound: "sonidos/elefante.mp3" }
         ];
         
         let currentQuizIndex = 0;
@@ -621,29 +621,6 @@
         const totalQuestions = 5;
         let isSoundMuted = false;
 
-        <script>
-        // 1. BASE DE DATOS (Rutas limpias: un solo .jpg y .mp3)
-        const animals = [
-            { name: "PERRO", image: "image/perro.jpg", sound: "audio/perro.mp3" },
-            { name: "GATO", image: "image/gato.jpg", sound: "audio/gato.mp3" },
-            { name: "VACA", image: "image/vaca.jpg", sound: "audio/vaca.mp3" },
-            { name: "CABALLO", image: "image/caballo.jpg", sound: "audio/caballo.mp3" },
-            { name: "OVEJA", image: "image/oveja.jpg", sound: "audio/oveja.mp3" },
-            { name: "CERDO", image: "image/cerdo.jpg", sound: "audio/cerdo.mp3" },
-            { name: "PATO", image: "image/pato.jpg", sound: "audio/pato.mp3" },
-            { name: "GALLO", image: "image/gallo.jpg", sound: "audio/gallo.mp3" },
-            { name: "LEÓN", image: "image/leon.jpg", sound: "audio/leon.mp3" },
-            { name: "ELEFANTE", image: "image/elefante.jpg", sound: "audio/elefante.mp3" }
-        ];
-        
-        let currentQuizIndex = 0;
-        let score = 0;
-        let usedAnimals = [];
-        const totalQuestions = 5;
-        let isSoundMuted = false;
-        let currentAudio = null;
-
-        // 2. SISTEMA DE AUDIO REPARADO
         function playSound(url) {
             if (isSoundMuted) return;
             if (currentAudio) {
