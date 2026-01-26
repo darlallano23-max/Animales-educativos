@@ -601,59 +601,20 @@
 
     <script>
         // Base de datos de animales
+        // Tu nueva base de datos con tus archivos de GitHub
         const animals = [
-            {
-                name: "PERRO",
-                image: "https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=600&h=600&fit=crop",
-                sound: "https://cdn.pixabay.com/audio/2022/03/10/audio_4c991fffb8.mp3"
-            },
-            {
-                name: "GATO",
-                image: "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=600&h=600&fit=crop",
-                sound: "https://cdn.pixabay.com/audio/2023/05/23/audio_1e0f2554d0.mp3"
-            },
-            {
-                name: "VACA",
-                image: "https://images.unsplash.com/photo-1516467508483-a7212febe31a?w=600&h=600&fit=crop",
-                sound: "https://cdn.pixabay.com/audio/2022/03/10/audio_35eb87e5d9.mp3"
-            },
-            {
-                name: "CABALLO",
-                image: "https://images.unsplash.com/photo-1553284965-83fd3e82fa5a?w=600&h=600&fit=crop",
-                sound: "https://cdn.pixabay.com/audio/2022/03/10/audio_7823c09be6.mp3"
-            },
-            {
-                name: "OVEJA",
-                image: "https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=600&h=600&fit=crop",
-                sound: "https://cdn.pixabay.com/audio/2023/08/07/audio_1f87f49d8e.mp3"
-            },
-            {
-                name: "CERDO",
-                image: "https://images.unsplash.com/photo-1516467508483-a7212febe31a?w=600&h=600&fit=crop",
-                sound: "https://cdn.pixabay.com/audio/2022/03/10/audio_9c9c0ab9fa.mp3"
-            },
-            {
-                name: "PATO",
-                image: "https://images.unsplash.com/photo-1551969014-7d2c4cddf0b6?w=600&h=600&fit=crop",
-                sound: "https://cdn.pixabay.com/audio/2022/03/10/audio_1e5d7f6fa4.mp3"
-            },
-            {
-                name: "GALLO",
-                image: "https://images.unsplash.com/photo-1548550023-2bdb3c5beed7?w=600&h=600&fit=crop",
-                sound: "https://cdn.pixabay.com/audio/2022/03/24/audio_e123467c11.mp3"
-            },
-            {
-                name: "LEÓN",
-                image: "https://images.unsplash.com/photo-1546182990-dffeafbe841d?w=600&h=600&fit=crop",
-                sound: "https://cdn.pixabay.com/audio/2022/03/10/audio_5c0fa0c495.mp3"
-            },
-            {
-                name: "ELEFANTE",
-                image: "https://images.unsplash.com/photo-1564760055775-d63b17a55c44?w=600&h=600&fit=crop",
-                sound: "https://cdn.pixabay.com/audio/2022/03/10/audio_ad86886903.mp3"
-            }
+            { name: "PERRO", image: "image/perro.jpg", sound: "audio/perro.mp3" },
+            { name: "GATO", image: "image/gato.jpg", sound: "audio/gato.mp3" },
+            { name: "VACA", image: "image/vaca.jpg", sound: "audio/vaca.mp3" },
+            { name: "CABALLO", image: "image/caballo.jpg", sound: "audio/caballo.mp3" },
+            { name: "OVEJA", image: "image/oveja.jpg", sound: "audio/oveja.mp3" },
+            { name: "CERDO", image: "image/cerdo.jpg", sound: "audio/cerdo.mp3" },
+            { name: "PATO", image: "image/pato.jpg", sound: "audio/pato.mp3" },
+            { name: "GALLO", image: "image/gallo.jpg", sound: "audio/gallo.mp3" },
+            { name: "LEÓN", image: "image/leon.jpg", sound: "audio/leon.mp3" },
+            { name: "ELEFANTE", image: "image/elefante.jpg", sound: "audio/elefante.mp3" }
         ];
-
+        
         let currentQuizIndex = 0;
         let score = 0;
         let usedAnimals = [];
@@ -663,15 +624,16 @@
         // Sistema de audio con gestión de estado
         let currentAudio = null;
 
-        function playSound(url) {
+      function playSound(url) {
             if (isSoundMuted) return;
             
             if (currentAudio) {
                 currentAudio.pause();
                 currentAudio.currentTime = 0;
             }
+            
             currentAudio = new Audio(url);
-            currentAudio.play().catch(e => console.log("Error reproduciendo audio:", e));
+            currentAudio.play().catch(e => console.log("Error al cargar:", url));
         }
 
         function playSuccessSound() {
