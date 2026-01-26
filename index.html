@@ -621,19 +621,37 @@
         const totalQuestions = 5;
         let isSoundMuted = false;
 
-        // Sistema de audio con gestión de estado
+        <script>
+        // 1. BASE DE DATOS (Rutas limpias: un solo .jpg y .mp3)
+        const animals = [
+            { name: "PERRO", image: "image/perro.jpg", sound: "audio/perro.mp3" },
+            { name: "GATO", image: "image/gato.jpg", sound: "audio/gato.mp3" },
+            { name: "VACA", image: "image/vaca.jpg", sound: "audio/vaca.mp3" },
+            { name: "CABALLO", image: "image/caballo.jpg", sound: "audio/caballo.mp3" },
+            { name: "OVEJA", image: "image/oveja.jpg", sound: "audio/oveja.mp3" },
+            { name: "CERDO", image: "image/cerdo.jpg", sound: "audio/cerdo.mp3" },
+            { name: "PATO", image: "image/pato.jpg", sound: "audio/pato.mp3" },
+            { name: "GALLO", image: "image/gallo.jpg", sound: "audio/gallo.mp3" },
+            { name: "LEÓN", image: "image/leon.jpg", sound: "audio/leon.mp3" },
+            { name: "ELEFANTE", image: "image/elefante.jpg", sound: "audio/elefante.mp3" }
+        ];
+        
+        let currentQuizIndex = 0;
+        let score = 0;
+        let usedAnimals = [];
+        const totalQuestions = 5;
+        let isSoundMuted = false;
         let currentAudio = null;
 
-      function playSound(url) {
+        // 2. SISTEMA DE AUDIO REPARADO
+        function playSound(url) {
             if (isSoundMuted) return;
-            
             if (currentAudio) {
                 currentAudio.pause();
                 currentAudio.currentTime = 0;
             }
-            
             currentAudio = new Audio(url);
-            currentAudio.play().catch(e => console.log("Error al cargar:", url));
+            currentAudio.play().catch(e => console.log("Error al cargar audio:", url));
         }
 
         function playSuccessSound() {
@@ -644,40 +662,27 @@
             playSound('https://cdn.pixabay.com/audio/2022/03/15/audio_49a538c423.mp3');
         }
 
-        // Control de sonido
         function toggleSound() {
             isSoundMuted = !isSoundMuted;
             const btn = document.getElementById('soundControl');
-            
-            if (isSoundMuted) {
-                btn.textContent = '🔇';
-                btn.classList.add('muted');
-                if (currentAudio) {
-                    currentAudio.pause();
-                }
-            } else {
-                btn.textContent = '🔊';
-                btn.classList.remove('muted');
-            }
+            btn.textContent = isSoundMuted ? '🔇' : '🔊';
+            btn.classList.toggle('muted', isSoundMuted);
+            if (isSoundMuted && currentAudio) currentAudio.pause();
         }
 
-        // Navegación entre pantallas
+        // 3. NAVEGACIÓN (Asegura que los botones de menú funcionen)
         function hideAllScreens() {
-            document.getElementById('homeScreen').classList.add('hidden');
-            document.getElementById('galleryScreen').classList.add('hidden');
-            document.getElementById('quizScreen').classList.add('hidden');
-            document.getElementById('resultScreen').classList.add('hidden');
-            document.getElementById('tutorialScreen').classList.add('hidden');
-            document.getElementById('infoScreen').classList.add('hidden');
+            const screens = ['homeScreen', 'galleryScreen', 'quizScreen', 'resultScreen', 'tutorialScreen', 'infoScreen'];
+            screens.forEach(id => {
+                const screen = document.getElementById(id);
+                if (screen) screen.classList.add('hidden');
+            });
         }
 
         function goHome() {
             hideAllScreens();
             document.getElementById('homeScreen').classList.remove('hidden');
-            if (currentAudio) {
-                currentAudio.pause();
-                currentAudio = null;
-            }
+            if (currentAudio) { currentAudio.pause(); currentAudio = null; }
         }
 
         function showGallery() {
@@ -696,41 +701,27 @@
             document.getElementById('infoScreen').classList.remove('hidden');
         }
 
-        // Renderizar galería con animación de pulso
+        // 4. GALERÍA INTERACTIVA
         function renderGallery() {
             const grid = document.getElementById('animalGrid');
             grid.innerHTML = '';
-            
             animals.forEach(animal => {
                 const card = document.createElement('div');
                 card.className = 'animal-card';
-                card.setAttribute('role', 'button');
-                card.setAttribute('tabindex', '0');
-                card.setAttribute('aria-label', `${animal.name}, presiona para escuchar`);
-                
                 card.innerHTML = `
                     <img src="${animal.image}" alt="${animal.name}" class="animal-image">
                     <div class="animal-name">${animal.name}</div>
                 `;
-                
-                const clickHandler = () => {
+                card.onclick = () => {
                     playSound(animal.sound);
                     card.classList.add('playing');
                     setTimeout(() => card.classList.remove('playing'), 600);
                 };
-                
-                card.onclick = clickHandler;
-                card.onkeypress = (e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                        clickHandler();
-                    }
-                };
-                
                 grid.appendChild(card);
             });
         }
 
-        // Sistema de Quiz
+        // 5. LÓGICA DEL JUEGO (QUIZ)
         function startQuiz() {
             hideAllScreens();
             document.getElementById('quizScreen').classList.remove('hidden');
@@ -740,31 +731,19 @@
             showNextQuestion();
         }
 
-        function getRandomAnimals(correctAnimal, count) {
-            const options = [correctAnimal];
-            const available = animals.filter(a => a.name !== correctAnimal.name);
-            
-            while (options.length < count && available.length > 0) {
-                const randomIndex = Math.floor(Math.random() * available.length);
-                options.push(available[randomIndex]);
-                available.splice(randomIndex, 1);
-            }
-            
-            return options.sort(() => Math.random() - 0.5);
-        }
-
-       function showNextQuestion() {
+        function showNextQuestion() {
             if (currentQuizIndex >= totalQuestions) {
                 showResults();
                 return;
             }
-
             const availableAnimals = animals.filter(a => !usedAnimals.includes(a.name));
             const correctAnimal = availableAnimals[Math.floor(Math.random() * availableAnimals.length)];
             usedAnimals.push(correctAnimal.name);
 
             document.getElementById('quizQuestion').textContent = `¿QUÉ ANIMAL HACE ESTE SONIDO?`;
-            playSound(correctAnimal.sound);
+            
+            // Suena el animal después de un breve delay
+            setTimeout(() => playSound(correctAnimal.sound), 500);
 
             const options = getRandomAnimals(correctAnimal, 3);
             const optionsContainer = document.getElementById('quizOptions');
@@ -773,8 +752,58 @@
             options.forEach(option => {
                 const btn = document.createElement('div');
                 btn.className = 'quiz-option';
-                btn.innerHTML = `<img src="${option.image}" style="width:100%; border-radius:15px;">`;
+                btn.innerHTML = `<img src="${option.image}" style="width:100%; border-radius:15px; height:180px; object-fit:cover;">`;
                 btn.onclick = () => checkAnswer(option.name === correctAnimal.name, btn);
                 optionsContainer.appendChild(btn);
             });
         }
+
+        function getRandomAnimals(correctAnimal, count) {
+            let options = [correctAnimal];
+            let available = animals.filter(a => a.name !== correctAnimal.name);
+            for (let i = 0; i < count - 1; i++) {
+                const index = Math.floor(Math.random() * available.length);
+                options.push(available.splice(index, 1)[0]);
+            }
+            return options.sort(() => Math.random() - 0.5);
+        }
+
+        // FUNCIÓN CRÍTICA: Procesa si ganaste o perdiste
+        function checkAnswer(isCorrect, element) {
+            // Bloquea clics extra
+            document.querySelectorAll('.quiz-option').forEach(opt => opt.style.pointerEvents = 'none');
+            
+            if (isCorrect) {
+                score++;
+                element.classList.add('correct');
+                playSuccessSound();
+                createConfetti();
+            } else {
+                element.classList.add('incorrect');
+                playErrorSound();
+            }
+
+            setTimeout(() => {
+                currentQuizIndex++;
+                showNextQuestion();
+            }, 1800);
+        }
+
+        function showResults() {
+            hideAllScreens();
+            document.getElementById('resultScreen').classList.remove('hidden');
+            document.getElementById('scoreDisplay').textContent = `LOGRASTE ${score} DE ${totalQuestions} PUNTOS`;
+        }
+
+        function createConfetti() {
+            for(let i=0; i<30; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.backgroundColor = '#' + Math.floor(Math.random()*16777215).toString(16);
+                confetti.style.animationDuration = (Math.random() * 2 + 1) + 's';
+                document.body.appendChild(confetti);
+                setTimeout(() => confetti.remove(), 3000);
+            }
+        }
+    </script>
