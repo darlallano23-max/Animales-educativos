@@ -753,15 +753,28 @@
             return options.sort(() => Math.random() - 0.5);
         }
 
-        function showNextQuestion() {
+       function showNextQuestion() {
             if (currentQuizIndex >= totalQuestions) {
                 showResults();
                 return;
             }
 
             const availableAnimals = animals.filter(a => !usedAnimals.includes(a.name));
-            if (availableAnimals.length === 0) {
-                usedAnimals = [];
-            }
+            const correctAnimal = availableAnimals[Math.floor(Math.random() * availableAnimals.length)];
+            usedAnimals.push(correctAnimal.name);
 
-            const correctAnimal = availableAnimals[Math.floor(Math
+            document.getElementById('quizQuestion').textContent = `¿QUÉ ANIMAL HACE ESTE SONIDO?`;
+            playSound(correctAnimal.sound);
+
+            const options = getRandomAnimals(correctAnimal, 3);
+            const optionsContainer = document.getElementById('quizOptions');
+            optionsContainer.innerHTML = '';
+
+            options.forEach(option => {
+                const btn = document.createElement('div');
+                btn.className = 'quiz-option';
+                btn.innerHTML = `<img src="${option.image}" style="width:100%; border-radius:15px;">`;
+                btn.onclick = () => checkAnswer(option.name === correctAnimal.name, btn);
+                optionsContainer.appendChild(btn);
+            });
+        }
