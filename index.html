@@ -525,9 +525,9 @@
             <h2 class="section-title">📺 CÓMO USAR LA APP</h2>
             
             <div class="video-container">
-                <!-- Reemplaza con tu URL de video de YouTube o archivo local -->
+               
                 <iframe 
-                    src="https://www.youtube.com/embed/dQw4w9WgXcQ" 
+                    src="https://youtu.be/kD8b2t58c58" 
                     title="Tutorial de la aplicación"
                     frameborder="0" 
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
@@ -535,7 +535,7 @@
                     aria-label="Video tutorial de uso de la aplicación">
                 </iframe>
                 <p style="margin-top: 15px; color: #666; text-align: center;">
-                    ⚠️ Reemplaza esta URL con tu video tutorial de 5 minutos
+                    video tutorial 
                 </p>
             </div>
             
@@ -600,7 +600,7 @@
     </button>
 
     <script>
-        // 1. BASE DE DATOS - Ajustada EXACTAMENTE a tus capturas de pantalla
+        
         const animals = [
             { name: "PERRO", image: "image/perro.jpg", sound: "sonidos/perro.mp3" },
             { name: "GATO", image: "image/gato.jpg", sound: "sonidos/gato.mp3" },
@@ -621,14 +621,14 @@
         let isSoundMuted = false;
         let currentAudio = null;
 
-        // 2. FUNCIÓN DE AUDIO (Simplificada para evitar errores de ruta)
+        
         function playSound(url) {
             if (isSoundMuted) return;
             if (currentAudio) {
                 currentAudio.pause();
                 currentAudio.currentTime = 0;
             }
-            // Usamos la ruta relativa directa
+            
             currentAudio = new Audio(url);
             currentAudio.play().catch(e => console.log("Error en: " + url));
         }
@@ -650,7 +650,7 @@
             if (isSoundMuted && currentAudio) currentAudio.pause();
         }
 
-        // 3. NAVEGACIÓN
+        // NAVEGACIÓN
         function hideAllScreens() {
             ['homeScreen', 'galleryScreen', 'quizScreen', 'resultScreen', 'tutorialScreen', 'infoScreen'].forEach(id => {
                 const s = document.getElementById(id);
@@ -672,7 +672,7 @@
         function showTutorial() { hideAllScreens(); document.getElementById('tutorialScreen').classList.remove('hidden'); }
         function showInfo() { hideAllScreens(); document.getElementById('infoScreen').classList.remove('hidden'); }
 
-        // 4. GALERÍA
+        // GALERÍA
         function renderGallery() {
             const grid = document.getElementById('animalGrid');
             grid.innerHTML = '';
@@ -692,7 +692,7 @@
             });
         }
 
-        // 5. JUEGO
+        // JUEGO
         function startQuiz() {
             hideAllScreens();
             document.getElementById('quizScreen').classList.remove('hidden');
