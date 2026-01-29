@@ -516,39 +516,40 @@
             </div>
         </div>
 
-        <!-- Pantalla de Tutorial -->
         <div id="tutorialScreen" class="hidden tutorial-screen">
-            <div class="nav-bar">
-                <button class="nav-btn" onclick="goHome()">🏠 INICIO</button>
-            </div>
-            
-            <h2 class="section-title">📺 CÓMO USAR LA APP</h2>
-            
-            <div class="video-container">
-               
-                <iframe 
-                    src="https://www.youtube.com/watch?v=kD8b2t58c58" 
-                    title="Tutorial de la aplicación"
-                    frameborder="0" 
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                    allowfullscreen
-                    aria-label="Video tutorial de uso de la aplicación">
-                </iframe>
-                <p style="margin-top: 15px; color: #666; text-align: center;">
-                    video tutorial 
-                </p>
-            </div>
-            
-            <div class="video-description">
-                <h3>🎓 En este video aprenderás:</h3>
-                <ul>
-                    <li>✅ Cómo explorar la galería de animales</li>
-                    <li>✅ Cómo jugar el quiz educativo</li>
-                    <li>✅ Consejos para aprovechar al máximo la app</li>
-                    <li>✅ Características especiales de navegación</li>
-                </ul>
-            </div>
-        </div>
+    <div class="nav-bar">
+        <button class="nav-btn" onclick="goHome()">🏠 INICIO</button>
+    </div>
+    
+    <h2 class="section-title">📺 CÓMO USAR LA APP</h2>
+    
+    <div class="video-container" style="display: flex; flex-direction: column; align-items: center;">
+        <iframe 
+            width="800" 
+            height="450"
+            src="https://www.youtube.com/embed/kD8b2t58c58" 
+            title="Tutorial de la aplicación"
+            frameborder="0" 
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+            allowfullscreen
+            aria-label="Video tutorial de uso de la aplicación">
+        </iframe>
+        <p style="margin-top: 15px; color: #666; text-align: center;">
+            video tutorial 
+        </p>
+    </div>
+    
+    <div class="video-description">
+        <h3>🎓 Guía del Video Tutorial (Duración: 5 min):</h3>
+        <ul>
+            <li>✅ <b>Introducción:</b> Presentación del objetivo educativo de la aplicación.</li>
+            <li>✅ <b>Exploración:</b> Cómo interactuar con la galería para descubrir sonidos.</li>
+            <li>✅ <b>Dinámica de Juego:</b> Demostración del cuestionario y premios visuales.</li>
+            <li>✅ <b>Beneficios:</b> Estímulo del lenguaje y coordinación ojo-mano en niños.</li>
+            <li>✅ <b>Consejos de Uso:</b> Guía para padres sobre cómo jugar en familia.</li>
+        </ul>
+    </div>
+</div>
 
         <!-- Pantalla de Información -->
         <div id="infoScreen" class="hidden info-screen">
